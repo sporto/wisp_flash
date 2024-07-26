@@ -1,0 +1,17 @@
+name = "wisp_flash"
+version = "0.1.0"
+
+description = "Middleware to use flash messages in Wisp"
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "sporto", repo = "" }
+# links = [{ title = "Website", href = "" }]
+#
+# For a full reference of all the available options, you can have a look at
+# https://gleam.run/writing-gleam/gleam-toml/.
+
+[dependencies]
+gleam_stdlib = ">= 0.36.0 and < 2.0.0"
+wisp = ">= 0.16.0 and < 1.0.0"
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"

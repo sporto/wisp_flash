@@ -55,34 +55,26 @@ fn set_flash_with_exp(
   )
 }
 
-type SetInContext(ctx) =
-  fn(Option(String), Option(String)) -> ctx
-
 /// Get the flash message and kind.
 /// This middleware goes around your request.
 /// This gets the values from the cookies and then deletes them.
-/// This requires a function to set the flash values in your context.
+/// The middleware callback will return the alert kind and message.
 /// After putting these values in the context, you can use them to render alerts in your view.
 ///
 /// ## Example
 ///
 /// ```gleam
-/// let set_in_context = fn(kind: Option(String), message: Option(String)) {
-///   Context(..ctx, flash_kind: kind, flash_message: message)
-/// }
+/// use kind, message <- wisp_flash.get_flash(request)
 ///
-/// use ctx <- wisp_flash.get_flash(request, set_in_context)
+/// let ctx = Context(..ctx, flash_kind: kind, flash_message: message)
 /// ```
 pub fn get_flash(
   request: Request,
-  set_in_context: SetInContext(ctx),
-  next: fn(ctx) -> Response,
+  next: fn(Option(String), Option(String)) -> Response,
 ) {
   let #(kind, message) = get_flash_in(request)
 
-  let next_ctx = set_in_context(kind, message)
-
-  let response = next(next_ctx)
+  let response = next(kind, message)
 
   // Remove the flash cookies on the way out
   get_flash_out(response, request)
@@ -96,7 +88,7 @@ pub fn get_flash(
 /// ```gleam
 /// let #(kind, message) = wisp_flash.get_flash_in(request)
 /// ```
-pub fn get_flash_in(request: Request) -> #(Option(String), Option(String)) {
+fn get_flash_in(request: Request) -> #(Option(String), Option(String)) {
   let kind =
     wisp.get_cookie(request, session_cookie_alert_kind, wisp.PlainText)
     |> option.from_result
@@ -116,6 +108,6 @@ pub fn get_flash_in(request: Request) -> #(Option(String), Option(String)) {
 /// ```gleam
 /// response |> get_flash_out(request)
 /// ```
-pub fn get_flash_out(response, request) {
+fn get_flash_out(response, request) {
   set_flash_with_exp(response, request, "", "", 0)
 }

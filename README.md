@@ -19,11 +19,9 @@ wisp.redirect("/home")
 In your router:
 
 ```gleam
-let set_in_context = fn(kind: Option(String), message: Option(String)) {
-  Context(..ctx, flash_kind: kind, flash_message: message)
-}
+use kind, message <- wisp_flash.get_flash(request)
 
-use ctx <- wisp_flash.get_flash(request, set_in_context)
+let ctx = Context(..ctx, flash_kind: kind, flash_message: message)
 ```
 
 In your view:

@@ -1,5 +1,6 @@
 import gleam/dict
-import gleam/option.{type Option, Some}
+import gleam/http/response
+import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
 import wisp
@@ -8,10 +9,6 @@ import wisp_flash
 
 pub fn main() {
   gleeunit.main()
-}
-
-type Context {
-  Context(kind: Option(String), message: Option(String))
 }
 
 pub fn set_cookies_test() {
@@ -37,13 +34,9 @@ pub fn get_flash_test() {
     |> testing.set_cookie("alert_kind", "error", wisp.PlainText)
     |> testing.set_cookie("alert_message", "Failed", wisp.PlainText)
 
-  let set_in_context = fn(kind, message) {
-    Context(kind: kind, message: message)
-  }
+  use kind, message <- wisp_flash.get_flash(request)
 
-  wisp_flash.get_flash(request, set_in_context, fn(ctx) {
-    ctx.kind |> should.equal(Some("error"))
-    ctx.message |> should.equal(Some("Failed"))
-    wisp.ok()
-  })
+  kind |> should.equal(Some("error"))
+  message |> should.equal(Some("Failed"))
+  wisp.ok()
 }

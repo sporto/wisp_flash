@@ -3,7 +3,7 @@ version = "0.3.0"
 
 description = "Middleware to use flash messages in Wisp"
 licences = ["Apache-2.0"]
-repository = { type = "github", user = "sporto", repo = "" }
+repository = { type = "github", user = "sporto", repo = "wisp_flash" }
 # links = [{ title = "Website", href = "" }]
 #
 # For a full reference of all the available options, you can have a look at

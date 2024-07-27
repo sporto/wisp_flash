@@ -43,14 +43,14 @@ fn set_flash_with_exp(
     request,
     session_cookie_alert_kind,
     kind,
-    wisp.PlainText,
+    wisp.Signed,
     expiration,
   )
   |> wisp.set_cookie(
     request,
     session_cookie_alert_message,
     message,
-    wisp.PlainText,
+    wisp.Signed,
     expiration,
   )
 }
@@ -90,11 +90,11 @@ pub fn get_flash(
 /// ```
 fn get_flash_in(request: Request) -> #(Option(String), Option(String)) {
   let kind =
-    wisp.get_cookie(request, session_cookie_alert_kind, wisp.PlainText)
+    wisp.get_cookie(request, session_cookie_alert_kind, wisp.Signed)
     |> option.from_result
 
   let message =
-    wisp.get_cookie(request, session_cookie_alert_message, wisp.PlainText)
+    wisp.get_cookie(request, session_cookie_alert_message, wisp.Signed)
     |> option.from_result
 
   #(kind, message)

@@ -23,16 +23,19 @@ pub fn set_cookies_test() {
     |> dict.from_list
 
   cookies
-  |> dict.get("alert_kind")
-  // base64 encoded
-  |> should.equal(Ok("ZXJyb3I"))
+  |> dict.has_key("alert_kind")
+  |> should.equal(True)
+
+  cookies
+  |> dict.has_key("alert_message")
+  |> should.equal(True)
 }
 
 pub fn get_flash_test() {
   let request =
     testing.get("/", [])
-    |> testing.set_cookie("alert_kind", "error", wisp.PlainText)
-    |> testing.set_cookie("alert_message", "Failed", wisp.PlainText)
+    |> testing.set_cookie("alert_kind", "error", wisp.Signed)
+    |> testing.set_cookie("alert_message", "Failed", wisp.Signed)
 
   use kind, message <- wisp_flash.get_flash(request)
 

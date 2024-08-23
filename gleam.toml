@@ -1,5 +1,5 @@
 name = "wisp_flash"
-version = "0.3.0"
+version = "1.0.0"
 
 description = "Middleware to use flash messages in Wisp"
 licences = ["Apache-2.0"]
@@ -11,7 +11,7 @@ repository = { type = "github", user = "sporto", repo = "wisp_flash" }
 
 [dependencies]
 gleam_stdlib = ">= 0.36.0 and < 2.0.0"
-wisp = ">= 0.16.0 and < 1.0.0"
+wisp = ">= 1.0.0 and < 2.0.0"
 
 [dev-dependencies]
 gleam_http = ">= 3.6.0 and < 4.0.0"

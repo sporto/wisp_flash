@@ -1,10 +1,10 @@
 import gleam/dict
+import gleam/http
 import gleam/http/response
 import gleam/option.{Some}
 import gleeunit
-import gleeunit/should
 import wisp
-import wisp/testing
+import wisp/simulate
 import wisp_flash
 
 pub fn main() {
@@ -12,7 +12,7 @@ pub fn main() {
 }
 
 pub fn set_cookies_test() {
-  let request = testing.post("/delete", [], "")
+  let request = simulate.request(http.Post, "/delete")
 
   let response =
     wisp.redirect("/")
@@ -22,24 +22,22 @@ pub fn set_cookies_test() {
     response.get_cookies(response)
     |> dict.from_list
 
-  cookies
-  |> dict.has_key("alert_kind")
-  |> should.equal(True)
+  assert cookies
+    |> dict.has_key("alert_kind")
 
-  cookies
-  |> dict.has_key("alert_message")
-  |> should.equal(True)
+  assert cookies
+    |> dict.has_key("alert_message")
 }
 
 pub fn get_flash_test() {
   let request =
-    testing.get("/", [])
-    |> testing.set_cookie("alert_kind", "error", wisp.Signed)
-    |> testing.set_cookie("alert_message", "Failed", wisp.Signed)
+    simulate.request(http.Get, "/")
+    |> simulate.cookie("alert_kind", "error", wisp.Signed)
+    |> simulate.cookie("alert_message", "Failed", wisp.Signed)
 
   use kind, message <- wisp_flash.get_flash(request)
 
-  kind |> should.equal(Some("error"))
-  message |> should.equal(Some("Failed"))
+  assert kind == Some("error")
+  assert message == Some("Failed")
   wisp.ok()
 }
